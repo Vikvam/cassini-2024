@@ -2,7 +2,7 @@ from osgeo import ogr
 import json
 
 if __name__ == "__main__":
-    FILE = "ZABAGED_RESULTS.gdb"
+    FILE = "ZABAGED_RESULTS.gpkg"
 
     gdb = ogr.Open(FILE)
     layers = [gdb.GetLayerByIndex(i) for i in range(gdb.GetLayerCount())]
