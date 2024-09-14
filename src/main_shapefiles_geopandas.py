@@ -1,4 +1,6 @@
 import glob
+from typing import Callable
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 
@@ -16,13 +18,13 @@ def plot_layer(gdf, ax):
             ax.plot(x, y, "ro", label=row.name if idx == 0 else None)
 
 
-def get_features(gdf, filter: dict):
+def get_features(gdf, filter: dict[str, Callable]):
     features = []
     for idx, row in gdf.iterrows():
         properties = row.drop("geometry").to_dict()
         filters_ok = True
         for key in filter.keys():
-            if key not in properties.keys() or properties[key] != filter[key]:
+            if key not in properties.keys() or not filter[key](properties[key]):
                 filters_ok = False
         if filters_ok:
             features.append(row)
@@ -32,17 +34,11 @@ def get_features(gdf, filter: dict):
 if __name__ == "__main__":
     fig, ax = plt.subplots()
 
-    for file in glob.glob("katastr/723754/*_DEF.shp"):
-        gdf = gpd.read_file(file)
+    gpd_parcely_def = gpd.read_file("katastr/723754/PARCELY_KN_DEF.shp")
+    # for feature in get_features(gpd_parcely_def, {"DRUPOZ_KOD": lambda property: property == 13, "BUD_ID": lambda property: property is not None}):
+    for feature in get_features(gpd_parcely_def, {"DRUPOZ_KOD": lambda property: property == 13, "BUD_ID": lambda property: property == "59946757010"}):
+        print(feature)
 
-        for feature in get_features({"DRUPOZ_KOD": 14}):
-            print(feature)
-
-    #     print(file)
-    #     plot_layer(gdf, ax)
-    #
-    #     ax.set_xlim(min(ax.get_xlim()[0], gdf.total_bounds[0]), max(ax.get_xlim()[1], gdf.total_bounds[2]))
-    #     ax.set_ylim(min(ax.get_ylim()[0], gdf.total_bounds[1]), max(ax.get_ylim()[1], gdf.total_bounds[3]))
-    #
-    # plt.legend()
-    # plt.show()
+    gpd_parcely_p = gpd.read_file("katastr/723754/PARCELY_KN_P.shp")
+    for feature in get_features(gpd_parcely_p, {"ID": lambda property: property == "1284"}):
+        print(feature)
