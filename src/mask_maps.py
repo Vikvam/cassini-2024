@@ -1,5 +1,6 @@
 import geopandas as gpd
 import rasterio
+import os
 from osgeo import gdal
 from rasterio.mask import mask
 import matplotlib.pyplot as plt
@@ -12,8 +13,11 @@ OUTPUT_DIR = '../dataset/out'
 CLC_MAP_TIF = '../dataset/clc/CLCplus_2018_010m.tif'
 TREES_MAP_TIF = '../dataset/trees-density/TCD_2018_010m_03035_V2_0.tif'
 
-# json_name zadavat bez .json!!!!!!!!!!!!!!
-def mask_maps(json_name):
+# predpokladej, ze zipy jsou v dataset/shp
+SHP_DIR = '../dataset/shp'
+CADASTRE_FILE = "KATASTRALNI_UZEMI_P.shp"
+
+def mask_maps(cadastre_number, cadastre_path):
 
     def _save_new_tif(filename, out_meta):
         with rasterio.open(outfile, 'w', **out_meta) as dest:
@@ -32,8 +36,8 @@ def mask_maps(json_name):
         plt.show()
         
 
-    geojson_path = GEOJSON_DIR + "/" + json_name + ".json"
-    gdf = gpd.read_file(geojson_path)
+    gdf = gpd.read_file(cadastre_path)
+    gdf = gdf.to_crs(epsg=3035)
 
     # splacej stromy
     with rasterio.open(CLC_MAP_TIF) as src:
@@ -48,7 +52,7 @@ def mask_maps(json_name):
             "transform": out_transform
         })
 
-        outfile = OUTPUT_DIR + "/" + json_name + "-CLC.tif"
+        outfile = OUTPUT_DIR + "/" + cadastre_number + "-CLC.tif"
         _save_new_tif(outfile, out_meta)
         if (DEBUG_SHOW):
             _debug_show(outfile)
@@ -66,10 +70,25 @@ def mask_maps(json_name):
             "transform": out_transform
         })
 
-        outfile = OUTPUT_DIR + json_name + "-TREES.tif"
+        outfile = OUTPUT_DIR + "/" + cadastre_number + "-TREES.tif"
         _save_new_tif(outfile, out_meta)
         if (DEBUG_SHOW):
             _debug_show(outfile)
 
+
+def list_directories(path):
+    dirs = [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
+    return dirs
+
 if __name__ == "__main__":
-    mask_maps("praha1")
+    # projed vsechny adresare
+    directories = list_directories(SHP_DIR)
+    for d in directories:
+        cadastre_path = SHP_DIR + "/" + d + "/" + CADASTRE_FILE
+        if os.path.isfile(cadastre_path):
+            print("Processing", d)
+            mask_maps(d, cadastre_path)
+            print("Done processing", d)
+        else:
+            print(d, "not found, skipping")
+
