@@ -5,8 +5,8 @@ CADASTRE_DATA = "../dataset/UHDP.csv"
 
 class PotentialCalculator:
     def __init__(self):
-        csvfile = open(CADASTRE_DATA)
-        self.reader = csv.reader(csvfile)
+        csvfile = open(CADASTRE_DATA, 'r', encoding='windows-1250')
+        self.reader = csv.reader(csvfile, delimiter=';')
 
     def potential_coverage(self, parcel_number: int):
         """
@@ -16,13 +16,13 @@ class PotentialCalculator:
 
         If the parcel_number is not found, return None
         """
-        BEER_ROW = 5
-        VINE_ROW = 6
-        GARDEN_ROW = 7
-        GRASS_ROW = 9
-        FOREST_ROW = 10
-        WATER_ROW = 11
-        OTHER_ROW = 13
+        BEER_ROW = 8
+        VINE_ROW = 10
+        GARDEN_ROW = 12
+        GRASS_ROW = 16
+        FOREST_ROW = 18
+        WATER_ROW = 20
+        OTHER_ROW = 24
 
         found = None
         for i, r in enumerate(self.reader):
@@ -35,7 +35,8 @@ class PotentialCalculator:
             return None
 
         # check just to be sure (the OSTATNI row should be the last)
-        if OTHER_ROW > len(found):
+        # it loads one extra row, lower by one
+        if OTHER_ROW > len(found)-1:
             return None
 
         forest = int(found[FOREST_ROW-1])
@@ -51,4 +52,5 @@ class PotentialCalculator:
 
         return (korunni, sidliste)
 
-
+c = PotentialCalculator()
+print(c.potential_coverage(600229))
