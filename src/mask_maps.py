@@ -66,7 +66,7 @@ def mask_maps(json_name):
             "transform": out_transform
         })
 
-        outfile = OUTPUT_DIR + json_name + "-TREES.tif"
+        outfile = OUTPUT_DIR + "/" + json_name + "-TREES.tif"
         _save_new_tif(outfile, out_meta)
         if (DEBUG_SHOW):
             _debug_show(outfile)
