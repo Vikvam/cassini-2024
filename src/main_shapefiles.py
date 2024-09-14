@@ -34,15 +34,15 @@ KATASTRALNI_UZEMI_DEF {
     'ID'                ?
 """
 
+# {'ID': '1184', 'ID_2': '2399220604', 'TYPPPD_KOD': '100018', 'KATUZE_KOD': 723754, 'TEXT_KM': '170/1', 'PAR_VYMERA': 8, 'DRUPOZ_KOD': 14, 'ZPVYPA_KOD': 19, 'BUD_ID': None, 'STAV_PARC': 'n'}
+
 
 def plot_layer(layer, ax):
     name = layer.GetName()
-    # keys = set()
     print(name)
     for idx, feature in enumerate(layer):
         geometry = feature.GetGeometryRef()
         properties = {field: feature.GetField(field) for field in feature.keys()}
-        # keys.update(feature.keys())
         print(properties)
         if geometry.GetGeometryName() == "POLYGON":
             points = geometry.GetGeometryRef(0)
@@ -53,6 +53,7 @@ def plot_layer(layer, ax):
             x = geometry.GetX()
             y = geometry.GetY()
             ax.plot(x, y, "ro", label=name if idx == 0 else None)
+
 
 if __name__ == "__main__":
     driver = ogr.GetDriverByName("ESRI Shapefile")
