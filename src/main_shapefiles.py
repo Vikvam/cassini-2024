@@ -59,13 +59,7 @@ if __name__ == "__main__":
     driver = ogr.GetDriverByName("ESRI Shapefile")
     fig, ax = plt.subplots()
 
-<<<<<<< HEAD
     for file in glob.glob("727024/PARCELY_KN_P.shp"):
-||||||| 602003f
-    for file in glob.glob("katastr/723754/*_DEF.shp"):
-=======
-    for file in glob.glob("katastr/723754/BUDOVY_P.shp"):
->>>>>>> 2af6bf1a9de4cb0582fcd7f8773ec6157278cb3a
         data = driver.Open(file, 0)
         layer = data.GetLayer()
 
