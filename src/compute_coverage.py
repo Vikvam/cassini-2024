@@ -60,6 +60,7 @@ def compute_cov(file_tree, file_clc):
     return output_J
 
 
+
 def compute_cov_id(code: str, yr: str):
     root1 = f"{ROOT}/out{yr}/"
     root2 = f"{ROOT2}/out{yr}/"
@@ -74,3 +75,26 @@ def compute_cov_id(code: str, yr: str):
         data = compute_cov(file_tree, file_clc)
 
     return pd.DataFrame([data])
+
+def compute_cov_tree_only(file_tree):
+    building = [1]
+    trees = [2,3,4]
+    grass = [5,6,7]
+    RASTER = 10 #m
+
+    tree_per = 0
+    tree_km2 = 0
+    all_cov = 0
+    with rasterio.open(file_tree) as src:
+        data = src.read(1)
+        all_cov = np.sum(data != 240)
+        tree_cov = np.sum((data != 240)*(data/100))
+        tree_per = tree_cov/all_cov
+        tree_km2 = tree_cov*RASTER
+
+    output_J = {
+        'tree_precise_per' : float(tree_per),
+        'tree_precise_km2' : int(tree_km2),
+    }
+
+    return output_J

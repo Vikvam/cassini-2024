@@ -33,7 +33,7 @@ def get_avail_tree_area(catastr_folder):
 
     for feature in get_features(
             gpd_parcely_def,
-            {"DRUPOZ_KOD": lambda property: property == 16 or property == 12}
+            {"DRUPOZ_KOD": lambda property: property == 7}
     ):
         feature_P = features_parcely_poly[feature["ID"]]
         return_arr.append(feature_P)

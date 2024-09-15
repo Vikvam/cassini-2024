@@ -105,6 +105,7 @@ def location_selected(location: str):
 
 
 def show_df(df):
+    import plotly.express as px
     # Rename columns
     st.title("Land Coverage Analysis")
     df.columns = [
@@ -117,7 +118,20 @@ def show_df(df):
         'Building Coverage (%)',
         'Building Area Covered (km²)'
     ]
-    st.area_chart(df.iloc[:, [1, 3, 7]])
+    fig = px.pie(pd.DataFrame({
+    'Values': [
+        df["Urban Green Space Coverage (%)"].iloc[0],
+        df["Urban Tree Canopy Cover (%)"].iloc[0],
+        df["Building Coverage (%)"].iloc[0]
+    ],
+    'Category': [
+        'Urban Green Space (%)',
+        'Urban Tree Canopy (%)',
+        'Building, (%)'
+    ]
+    }), values='Values', names='Category', title='Land distribution')
+    # Display the chart in Streamlit
+    st.plotly_chart(fig)
 
     # Format percentage columns
     percentage_columns = ['Urban Green Space Coverage (%)', 'Urban Tree Canopy Cover (%)', 'Precise Urban Tree Canopy Coverage (%)',
@@ -131,8 +145,8 @@ def show_df(df):
         df[col] = df[col].apply(lambda x: f"{x:,.0f}")
 
     # Streamlit app
-
-    st.write("This table shows the breakdown of land coverage in our region:")
+    df = df[["Urban Green Space Coverage (%)", "Precise Urban Tree Canopy Coverage (%)", 'Building Coverage (%)']]
+    st.write("This table shows the breakdown of land coverage in the region:")
 
     # Use st.dataframe with custom styling
     st.dataframe(
@@ -175,8 +189,8 @@ def update_map(m: geemap.Map, year, thresh):
     m.centerObject(ee.Geometry.Point(st.session_state.center).buffer(5000), 15)
 
 def draw_gdfs(gdfs):
-    for gdf in gdfs:
-        m.add_gdf(gdf, layer_name=gdf["ID"].iloc[0])
+    merged_gdf = pd.concat(gdfs, ignore_index=True)
+    m.add_gdf(merged_gdf, layer_name="Cadaster Parcels", fill_color="red", fill_opacity=0.5)
 
 col1, col2 = st.columns([1, 1])
 with col1:
