@@ -57,10 +57,9 @@ def plot_layer(layer, ax):
 
 if __name__ == "__main__":
     driver = ogr.GetDriverByName("ESRI Shapefile")
-
     fig, ax = plt.subplots()
 
-    for file in glob.glob("katastr/723754/*_DEF.shp"):
+    for file in glob.glob("727024/PARCELY_KN_P.shp"):
         data = driver.Open(file, 0)
         layer = data.GetLayer()
 
@@ -72,4 +71,4 @@ if __name__ == "__main__":
         ax.set_ylim(min(ax.get_ylim()[0], extent[2]), max(ax.get_ylim()[1], extent[3]))
 
     # plt.legend()
-    # plt.show()
+        plt.show()
