@@ -11,13 +11,13 @@ class PotentialCalculator:
     def potential_coverage(self, parcel_number: int):
         """
         Returns: tuple(max sidliste, max korunni)
-        Sidliste: les+trava+voda+chmelnice+vinice
-        Korunni: les+trava
+        Sidliste: les+trava+voda+chmelnice+vinice+zahrada+ostatni
+        Korunni: les+trava+zahrada
 
         If the parcel_number is not found, return None
         """
         BEER_ROW = 8
-        VINE_ROW = 10
+        WINE_ROW = 10
         GARDEN_ROW = 12
         GRASS_ROW = 16
         FOREST_ROW = 18
@@ -46,7 +46,7 @@ class PotentialCalculator:
         garden = int(found[GARDEN_ROW-1])
         water = int(found[WATER_ROW-1])
         beer = int(found[BEER_ROW-1])
-        vine = int(found[VINE_ROW-1])
+        vine = int(found[WINE_ROW-1])
         other = int(found[OTHER_ROW-1])
 
         korunni = forest + grass + garden
