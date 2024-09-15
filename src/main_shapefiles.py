@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
     fig, ax = plt.subplots()
 
-    for file in glob.glob("katastr/723754/*_DEF.shp"):
+    for file in glob.glob("katastr/723754/BUDOVY_P.shp"):
         data = driver.Open(file, 0)
         layer = data.GetLayer()
 
