@@ -26,6 +26,7 @@ class PotentialCalculator:
 
         found = None
         for i, r in enumerate(self.reader):
+            # skip first line
             if i != 0 :
                 if int(r[0]) == parcel_number:
                     found = r
@@ -38,6 +39,7 @@ class PotentialCalculator:
         # it loads one extra row, lower by one
         if OTHER_ROW > len(found)-1:
             return None
+
 
         forest = int(found[FOREST_ROW-1])
         grass = int(found[GRASS_ROW-1])
@@ -52,5 +54,3 @@ class PotentialCalculator:
 
         return (korunni, sidliste)
 
-c = PotentialCalculator()
-print(c.potential_coverage(600229))
