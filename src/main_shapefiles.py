@@ -57,9 +57,10 @@ def plot_layer(layer, ax):
 
 if __name__ == "__main__":
     driver = ogr.GetDriverByName("ESRI Shapefile")
+
     fig, ax = plt.subplots()
 
-    for file in glob.glob("727024/PARCELY_KN_P.shp"):
+    for file in glob.glob("727024/PARCELY_KN_DEF.shp"):
         data = driver.Open(file, 0)
         layer = data.GetLayer()
 
